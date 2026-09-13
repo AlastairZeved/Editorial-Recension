@@ -1,0 +1,9 @@
+# Showcase media — never commit large video or rendered media bins
+*.mp4
+Media/
+docs/media/*.gif
+
+# OS / editor cruft
+.DS_Store
+Thumbs.db
+*.swp
