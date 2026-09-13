@@ -129,4 +129,25 @@ Where the same marks must live in markdown rather than in a plate, the fallback 
 | `pass-verdict.webp` | PASS seal, warm-ink title, standard chip | the closing card, 2:17 |
 | `cold-to-warm.webp` | 7.4 s of the film's defining motion: slate → paper | the turn, 2:02.9 |
 
-The MP4 itself is not committed to the repository. It is published as a release asset (`v6-showcase`) and linked from the README; `.gitignore` keeps the file out of the index, because a 125 MB video is not recoverable once it is in git history.
+## 7. Where the film is hosted, and why it is two places
+
+The MP4 is not committed to the repository — it is an output of the design system, not source, and a 125 MB file is not recoverable once it is in git history. `.gitignore` keeps it out of the index.
+
+It is published twice, because GitHub serves the two routes differently:
+
+| Route | How GitHub serves it | What a click does |
+|---|---|---|
+| **Release asset** (`v6-showcase`) | `Content-Type: application/octet-stream`, `Content-Disposition: attachment` | **downloads.** This is the archival copy of the master (119 MiB). |
+| **User attachment** (issue #12) | `Content-Type: video/mp4`, `Accept-Ranges: bytes`, 206 partial content | **streams and plays.** This is what the README player uses. |
+
+GitHub's README sanitizer strips `<video>` when its source is repository-relative or third-party — but **keeps it when the source is a GitHub user-attachment**. That single fact decides the architecture: the README embeds a real player, streaming the attachment, and points anyone who wants a local copy at the release.
+
+The uploaded file is a **web encode**, not the master, because the attachment CDN caps video at 100 MB:
+
+| | |
+|---|---|
+| Encoding | H.264 High, 1920×1080, CRF 17, preset slow, `-g 60`, `+faststart`, audio **passed through unre-encoded** |
+| Size | 80.0 MiB (master: 119.4 MiB) |
+| Fidelity | mean SSIM **0.99596** against the master, min 0.98915, over all 4,250 frames |
+
+The audio is a stream copy, so the approved mix is bit-for-bit the same in both files. GitHub adds `muted` to embedded players, which is why the README says so plainly rather than pretending the film starts with sound.

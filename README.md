@@ -8,10 +8,10 @@
 A two-agent editing loop that rewrites prose until readers without the author's expertise can follow it.
 
 <p align="center">
-<a href="https://github.com/AlastairZeved/Editorial-Recension/releases/download/v6-showcase/editorial-recension-showcase-v6.mp4"><img src="docs/media/hero-poster.webp" alt="The showcase film's title scene on a dark slate ground: the words 'Editorial Recension' in cream serif over a subtitle, with two cards below reading EDITOR — rewrites the text through five schemata, in phases — and EVALUATOR — scores the result against measurable features, blind — and a gold 'AGENT PLUGINS STANDARD' chip beneath them." width="100%"></a>
+<video src="https://github.com/user-attachments/assets/5faf8217-02eb-473a-bcc3-64ab35563ca7" controls preload="metadata"></video>
 </p>
 
-<p align="center"><sub>2:21 — the two agents, the loop, and a full recension pass &nbsp;&middot;&nbsp; click the frame to play the film</sub></p>
+<p align="center"><sub>2:21 — the two agents, the loop, and a full recension pass &nbsp;&middot;&nbsp; press play (GitHub starts the player muted — unmute for the narration)</sub></p>
 
 ---
 
@@ -465,13 +465,15 @@ The film is 2:21, 1920×1080, and is the authoritative design reference for ever
 
 | Watch | &nbsp; |
 |---|---|
-| <img src="docs/icons/icon-grain.svg" width="20" height="20" alt=""> **Full film, 2:21** | [Release asset `v6-showcase`](https://github.com/AlastairZeved/Editorial-Recension/releases/download/v6-showcase/editorial-recension-showcase-v6.mp4) — 119 MB, not committed to the repository |
-| <img src="docs/icons/icon-trace.svg" width="20" height="20" alt=""> **Poster frame** | [the hero frame at the top of this README](#editorial-recension-editorial-recension) |
+| <img src="docs/icons/icon-grain.svg" width="20" height="20" alt=""> **Play it, 2:21** | [the player](https://github.com/user-attachments/assets/5faf8217-02eb-473a-bcc3-64ab35563ca7) — the same film as in the hero, opening in GitHub's player rather than downloading |
+| <img src="docs/icons/icon-trace.svg" width="20" height="20" alt=""> **Keep a copy** | [release asset `v6-showcase`](https://github.com/AlastairZeved/Editorial-Recension/releases/download/v6-showcase/editorial-recension-showcase-v6.mp4) — the 119 MiB master, a deliberate download |
+| <img src="docs/icons/icon-standard.svg" width="20" height="20" alt=""> **Provenance** | [release notes](https://github.com/AlastairZeved/Editorial-Recension/releases/tag/v6-showcase) — what the web encode is, and its measured fidelity to the master |
 
 ### Stills from the film
 
 | &nbsp; | Scene | From |
 |---|---|---|
+| <img src="docs/media/hero-poster.webp" width="360" alt="The film's title scene on dark slate: 'Editorial Recension' in cream serif above two cards headed EDITOR in ember and EVALUATOR in verdict green, with the gold standard chip beneath."> | the title, and the two agents | 0:45 |
 | <img src="docs/media/exhibit-diff.webp" width="360" alt="The cold exhibit: the test paragraph on slate with six terms lit in jargon blue and marked unground."> | the exhibit — the paragraph as evidence | 0:21 |
 | <img src="docs/media/diff-marks.webp" width="360" alt="Two panels: the compression pass with struck hedges, beside the flow weld's seam marks."> | revision marks — struck and welded | 1:14 |
 | <img src="docs/media/issue-ledger.webp" width="360" alt="The evaluator's feature ledger with target-versus-found rows and failing scores in red."> | the evaluator's ledger | 1:48 |
@@ -485,8 +487,8 @@ The film is 2:21, 1920×1080, and is the authoritative design reference for ever
 
 <p align="center"><sub>paper grain at 0.075, the same radial vignette as every other section, the PASS seal at −2° &nbsp;&middot;&nbsp; <a href="./docs/design-notes.md">design notes §2</a></sub></p>
 
-> [!NOTE]
-> GitHub's README sanitizer strips `<video>`, so there is no inline player here. The poster frame above links to the release asset, and the animated WebP carries the motion. This is deliberate, not a broken embed.
+> [!IMPORTANT]
+> The inline player above works because of *where* the film is hosted. GitHub's README sanitizer strips `<video>` for repository-relative or third-party sources, but keeps it when the source is a GitHub user-attachment — and release assets are served with `Content-Disposition: attachment`, so a link to a release downloads instead of playing. The film therefore lives as an attachment (which streams with byte-range support as `video/mp4`), and the release holds the master for anyone who wants a copy.
 
 <p><img src="docs/icons/icon-grain.svg" width="18" height="18" alt=""> <sub>10 &middot; HOW THESE DOCS ARE BUILT</sub></p>
 
@@ -506,7 +508,7 @@ The documentation is the film's world applied to the repository's text, so it st
 The rule the documentation holds itself to: **no prose block runs past six lines without a structural break** — a table, a callout, a plate, a diagram, or an icon-led list. The Editor↔Evaluator loop is a cycle diagram, the schemata are a table, the ledger is a real table, and the diff carries real marks, because those are the shapes the subjects actually have.
 
 > [!TIP]
-> The docs ship as static assets — SVG, WebP, and no script — because GitHub's sanitizer strips `<style>`, inline `style` attributes, inline SVG, and `<video>`. Everything visual here was tested against GitHub's own renderer, not just a browser.
+> The docs ship as static assets — SVG, WebP, and no script — because GitHub's sanitizer strips `<style>`, inline `style` attributes and inline SVG. `<video>` survives only for GitHub user-attachment sources, which is how the hero player streams the film. Everything visual here was tested against GitHub's own renderer, not just a browser.
 
 <p><img src="docs/icons/icon-standard.svg" width="18" height="18" alt=""> <sub>11 &middot; MAINTAINERS</sub></p>
 
