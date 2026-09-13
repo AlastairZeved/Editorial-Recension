@@ -23,13 +23,12 @@ Editorial Recension is a two-agent editorial system packaged as a portable [Agen
 
 <img src="docs/media/agent-cards.svg" alt="Two slate plates side by side, matching the film's title cards: EDITOR in ember, rewrites the text through five schemata, in phases; EVALUATOR in verdict green, scores the result against measurable features, blind. Beneath them the line: they loop until the evaluator confirms the termination condition." width="100%">
 
-The system has two agents and a controller. The **editor** agent holds five named schemata — Barrier Bridge, Chain Repair, Compression Pass, Flow Weld, and Ripple Read — as its perceptual apparatus, and runs them in phases over your text. The **evaluator** agent scores the result against a measurable feature set *before* it reads the editor's explanation of what it did, then confirms or rejects the editor's claim that the text is done. They loop until the evaluator confirms the termination condition, or until five cycles are spent.
+The system has two agents and a controller. The **editor** agent holds five named schemata — Barrier Bridge, Chain Repair, Compression Pass, Flow Weld, and Ripple Read — as its perceptual apparatus, and runs them in phases over your text. The **evaluator** agent scores the result against a measurable feature set *before* it reads the editor's explanation of what it did, then confirms or rejects the editor's claim that the editing is complete. They loop until the evaluator confirms all tests pass, or until five cycles are spent and output is finalized.
 
-This repository is the plugin source. The product name is "Editorial Recension"; the repository folder and plugin package are `Editorial-Recension` / `editorial-recension` — the difference is casing only, not a rename.
 
 ### The verdict legend
 
-Every verdict in this system wears one of three marks. They are used throughout the documentation with exactly these meanings.
+There are only three verdicts for each test:
 
 | Verdict | Mark | What it means |
 |---|---|---|
@@ -83,7 +82,7 @@ Every verdict in this system wears one of three marks. They are used throughout 
 
 ## Background
 
-The starting observation is in the repo's own test evidence: ordinary single-pass editing optimizes for "reads well to someone who already understands it." A cleaner, tighter edit can leave every barrier intact — jargon ungrounded, reasoning asserted rather than derived, the register yanked mid-text. That is the opposite of the job when the writing has to carry a reader across a knowledge gap.
+Odinary single-pass editing optimizes for "reads well to someone who already understands it." A cleaner, tighter edit can leave every barrier intact — jargon: ungrounded claims with reasoning implied rather than explained, resulting in the user silently confused mid-text. That is the opposite of the job of writing for an audience. Concepts that use terms without defining them, definitions that require pre-existing knowledge to understand the over-arching concepts - written under the guise of "informative" or "explanatory" without disclosing 5-7 years of experience is required to understand the text.
 
 <img src="docs/media/exhibit-diff.webp" alt="A dark slate panel holding the repository's test paragraph about vibe coding. Six terms are lit in jargon blue and underlined — impedance mismatch, tokenizes, latent representation, training distribution, obviously, semantic distance — each marked UNGROUND by a small blue label, with the evaluator's count below: six ungrounded terms, one asserted leap, FAIL." width="100%">
 
