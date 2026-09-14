@@ -32,11 +32,6 @@ If each agent takes five turns and the text still fails, the best output and the
 
 ## When to Use
 
-Editorial Recension is a two-agent editorial system packaged as a skill. Its purpose is narrow and specific: edit prose until a reader who lacks the author's domain expertise can follow the reasoning chain — not until it "reads well" to someone who already understands the underlying concepts of a topic.
-
-
-## When to Use
-
 - Editing prose, essays, guides, documentation, or any writing with a reasoning chain
 - Writing that bridges domains (explaining one field's concepts using another field's language)
 - Any time writing must be followable by someone without the author's domain expertise
