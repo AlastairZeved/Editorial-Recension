@@ -1,6 +1,6 @@
 {
   "name": "editorial-recension",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Two-agent editorial system: an editor agent applies five named schemata, an evaluator agent independently scores the output against measurable features before seeing the editor's trace, and they loop until a reader without the author's domain expertise can follow the reasoning. Built from cross-domain translation of forensic linguistics, species counterpoint, oral-formulaic composition, and collaborative voice reconstruction.",
   "author": {
     "name": "Alastair Zeved"

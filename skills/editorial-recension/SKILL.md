@@ -22,7 +22,7 @@ A two-agent editorial system. The editor agent edits through named schemata. The
 
 ## How to Execute This Skill
 
-When invoked, follow this sequence exactly. Do not skip questions or pre-fill answers from surrounding context. The editor and evaluator agents inherit the audience definition established here — a vague target reader silently corrupts every downstream schema, so the validation below is load-bearing, not ceremony. Paths written `../../` are relative to this file; two levels up is the plugin root, where `agents/` and `schemata/` live.
+When invoked, follow this sequence exactly. Do not skip questions or pre-fill answers from surrounding context. The editor and evaluator agents inherit the audience definition established here — a vague target reader silently corrupts every downstream schema, so the validation below is load-bearing, not ceremony. Paths written `../../` are relative to this file; two levels up is the plugin root, where `agents/` and `schemata/` live. The plugin root's `agents/` directory is Claude Code's default agent discovery location — on Claude Code the editor and evaluator register automatically and are invoked as `editorial-recension:editor` and `editorial-recension:evaluator`; on other hosts, dispatch subagents with whatever mechanism the host provides, using these files as the agent definitions.
 
 Open with:
 
@@ -219,45 +219,53 @@ Do not dispatch agents until the user confirms this block is correct, or explici
 
 ---
 
-### Step 5: Dispatch to Editor Agent
+### Step 5: Dispatch the Editor Subagent
 
-**Only dispatch after user confirmation.** Pass the formatted templates — not the raw user text — to the agent.
+**Only dispatch after user confirmation.** Spawn the editor as an isolated subagent of type `editorial-recension:editor`, defined by `../../agents/editor.md`. Isolation is the point: the subagent receives only the dispatch payload below — never the intake conversation, the user's original messages, or anything else from this session.
 
-Send to the editor agent (`../../agents/editor.md`):
+Send to the editor subagent:
 - The full TARGET READER / KNOWS / DOESN'T KNOW template
 - The full PURPOSE / READER SHOULD template
 - The source text
 - The `PRECEDING CONTEXT` field exactly as formatted in the Q3 template. Do not rephrase it.
 - The schemata library (all files in `../../schemata/`) and the scale rules (`../../schemata/scale-rules.md`)
 
-The editor agent will:
+The editor subagent will:
 1. Run Phase 1 schemata (Barrier Bridge + Chain Repair)
 2. Run Phase 2 schema (Compression Pass)
 3. Run Phase 3 schema (Flow Weld)
 4. Run Phase 4 schema (Ripple Read)
 5. Return: edited text + schema trace + termination assessment
 
+Hold the editor's full return — edited text, schema trace, termination assessment. The schema trace is sent to the evaluator only in Message 2 of Step 6. It must never appear in the evaluator's scoring context.
+
 ---
 
-### Step 6: Dispatch to Evaluator Agent
+### Step 6: Dispatch the Evaluator Subagent — Two-Message Round
 
-Send to the evaluator agent (`../../agents/evaluator.md`):
-- The same three-part editorial context that was passed to the editor
+Spawn the evaluator as a **separate** isolated subagent of type `editorial-recension:evaluator`, defined by `../../agents/evaluator.md`. Independence here is mechanical, not aspirational: the evaluator's scoring context must contain no trace of the editor's reasoning, drafts, or schema trace when it scores. Sending the whole editor return in one payload forfeits the independence this architecture exists for.
+
+**Message 1 — blind scoring.** Send only:
+- The full editorial context that was passed to the editor: TARGET READER / KNOWS / DOESN'T KNOW, PURPOSE / READER SHOULD, and the `PRECEDING CONTEXT` field verbatim
 - The original source text
 - The editor's output text
-- The editor's schema trace
 
-The evaluator agent will:
-1. Score the output independently against all measurable features (BEFORE reading the trace)
-2. Verify the trace against its independent scoring
-3. Return: feature scores + trace discrepancies + verdict (PASS/FAIL)
+Do not send the schema trace, the editor's drafts, or the editor's reasoning in this message. Wait for the evaluator's complete Feature Scores report.
+
+**Message 2 — trace verification.** To the same evaluator subagent, send:
+- The editor's schema trace (held from Step 5)
+- The instruction to verify the trace against its already-recorded scores without re-scoring
+
+The evaluator's round output is the complete report — feature scores, trace discrepancies, failures, verdict (PASS/FAIL) — emitted as one document in Message 2.
+
+**Hosts without multi-turn subagents:** run Message 1 and Message 2 as two separate single-shot evaluator dispatches, passing the first dispatch's scores into the second. The rule is unchanged: no scoring context contains the trace.
 
 ---
 
 ### Step 7: Loop or Terminate
 
 **If evaluator returns FAIL:**
-- Pass the evaluator's failure report back to the editor agent
+- Send the evaluator's failure report back to the editor subagent. On hosts that keep subagent instances alive, continue the same editor instance. On single-shot hosts, re-dispatch the editor seeded with its previous output, its schema trace, and the failure report.
 - The editor re-enters its loop at the phase where failures were identified
 - Return to Step 6 with the editor's revised output
 
@@ -266,6 +274,8 @@ The evaluator agent will:
 - Present the final edited text to the user with the summary below
 
 The loop runs until the evaluator confirms the termination condition or five cycles complete. If failures are not decreasing after cycle 3, surface this to the user and let them decide whether to continue.
+
+**Fallback for hosts that cannot spawn subagents:** adopt both roles sequentially in this conversation — the editor role first, then the evaluator role — following the same agent files as their definitions. State plainly in the output summary that the independence guarantee is then procedural (the evaluator's score-before-trace discipline) rather than mechanical.
 
 ## Loop Limits
 
