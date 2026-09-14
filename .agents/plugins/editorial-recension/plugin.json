@@ -1,0 +1,5 @@
+{
+  "$schema": "https://antigravity.google/schemas/v1/plugin.json",
+  "name": "editorial-recension",
+  "description": "Two-agent editing loop: an editor applies five named schemata, an evaluator scores blind before reading the editor's trace, and they loop until the text passes."
+}

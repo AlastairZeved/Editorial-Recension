@@ -1,0 +1,64 @@
+name: manifests
+
+# Guards the packaging layer: every client manifest is generated from the root
+# plugin.json, so drift between harnesses is a build failure rather than a
+# support ticket.
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  guard:
+    name: manifest guard (drift + structure)
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Drift check (generated manifests match plugin.json)
+        run: python3 scripts/sync_manifests.py --check
+
+      - name: Structural validation (per-harness required fields)
+        run: python3 scripts/sync_manifests.py --validate
+
+      - name: Re-run the sync and fail on any change, tracked or untracked
+        run: |
+          python3 scripts/sync_manifests.py --write
+          if [ -n "$(git status --porcelain)" ]; then
+            echo "::error::client manifests are out of sync with plugin.json — run 'python3 scripts/sync_manifests.py --write' and commit the result"
+            git status --porcelain
+            git diff
+            exit 1
+          fi
+
+  claude-validate:
+    name: claude plugin validate --strict
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          # The Claude Code CLI declares engines.node >=22; Node 20 installs with
+          # EBADENGINE warnings only, so pin a version the package supports.
+          node-version: "22"
+
+      # Pinned: --strict semantics (warnings become errors) are version-specific.
+      - name: Install Claude Code CLI
+        run: npm install --global @anthropic-ai/claude-code@2.1.207
+
+      - name: Validate the marketplace manifest
+        run: claude plugin validate . --strict
+
+      - name: Validate the plugin manifest
+        run: claude plugin validate .claude-plugin/plugin.json --strict
