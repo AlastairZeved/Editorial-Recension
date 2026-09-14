@@ -13,6 +13,35 @@ An agent plugin built for editing prose down to the knowledge level of the reade
 
 ---
 
+## Install
+
+The repository root *is* the plugin — `plugin.json` plus `skills/`, `agents/` and `schemata/`. Every client gets a small manifest that points at that root, so no plugin content is duplicated anywhere.
+
+| Client | Install | Manifest it reads |
+|---|---|---|
+| **Claude Code** | `/plugin marketplace add AlastairZeved/Editorial-Recension` then `/plugin install editorial-recension@editorial-recension` | `.claude-plugin/marketplace.json` |
+| **Codex CLI** | `codex plugin marketplace add AlastairZeved/Editorial-Recension`, then install Editorial Recension from the Plugins Directory | `.agents/plugins/marketplace.json` |
+| **GitHub Copilot CLI** | `copilot plugin marketplace add AlastairZeved/Editorial-Recension` then `copilot plugin install editorial-recension@editorial-recension` | `.github/plugin/marketplace.json` |
+| **VS Code** | Command Palette → *Chat: Install Plugin From Source* → the repository URL, or register the repository in `chat.plugins.marketplaces` and install from `@agentPlugins` in the Extensions view | `.claude-plugin/marketplace.json` |
+| **Cursor** | Clone, then *Customize* in the sidebar → Editorial Recension → *Install*. For development, symlink the clone into `~/.cursor/plugins/local/`. Cursor loads Agent Plugins packages unchanged, so no Cursor manifest ships here | root `plugin.json` |
+| **Google Antigravity** | Open the repository as a workspace — Antigravity scans `.agents/plugins/` — or copy `.agents/plugins/editorial-recension/` into `~/.gemini/config/plugins/` | `.agents/plugins/editorial-recension/plugin.json` |
+| **Anything else** | Clone the repository into the agent's skill/plugin directory; anything that reads `SKILL.md` picks up `skills/editorial-recension/SKILL.md` | root `plugin.json` |
+
+Each route was checked against that vendor's own documentation on 2026-09-14 (the verification table lives in issue #17). The Antigravity workspace manifest is a marker file plus a symlink to `skills/`, so skill content stays single-sourced — clones on Windows need `git config core.symlinks true`.
+
+### Keeping the manifests in sync
+
+`plugin.json` at the repository root is the single source of truth for name, version, description, author, repository and license. Every client manifest is generated from it:
+
+```sh
+python3 scripts/sync_manifests.py --write   # rewrite the client manifests from plugin.json
+python3 scripts/sync_manifests.py           # drift check + structural validation, no writes
+```
+
+Bump the version in `plugin.json` only. CI runs the same script on every push and pull request, re-runs `--write` and fails if anything changed (drift), and runs `claude plugin validate . --strict`.
+
+---
+
 ## How to Use
 
 Invoke the skill and a 3 question intake begins: who the target reader is, what the reader should be able to do or understand after reading, and what text is being edited. If the answers you provide are too vague, the agent will not accept it and try to help refine the scope. 
