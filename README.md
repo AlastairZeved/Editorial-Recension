@@ -25,9 +25,9 @@ The **Evaluator** scores the edits themselves *before* it reads the editor's exp
 
 Together, they loop until all tests pass, or until five turns are spent, and the edited text is presented to the user. 
 
-If each agent takes three turns and there is no reduction in test failures, the agent will alert the user and ask before continuing.
+***If each agent takes three turns and there is no reduction in test failures, the agent will alert the user and ask before continuing.***
 
-If each agent takes five turns and the text still fails, the best output and the fail points are presented.
+***If each agent takes five turns and the text still fails, the best output and the fail points are presented.***
 
 
 ## When to Use
