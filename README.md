@@ -5,7 +5,7 @@
 
 ## At a Glance
 
-An agent skill built for editing prose down to the knowledge level of the reader by deploying two agents that work in sequentially, the Editor and the Evaluator, on a loop of your text until the Evaluator confirms all tests pass (or until each has taken 5 turns, whichever comes first).
+An agent plugin built for editing prose down to the knowledge level of the reader by deploying two agents that work in sequentially, the Editor and the Evaluator, on a loop of your text until the Evaluator confirms all tests pass (or until each has taken 5 turns, whichever comes first).
 
 ***Important Caveat:*** _this was built as a Claude Code plugin and includes the deployment of isolated subagents; however, if your agent does not have subagent deployment as a capability (or does not ingest subagent files from Agent Plugins 1.0.0 standard repos natively) then this plugin will not work as intended. After install, be sure to verify that the subagent files were received and deployable. If they weren't, ask your agent to build the subagents based on the SKILL.md which contains all of the relevant information your subagent needs to function._
 
@@ -17,7 +17,7 @@ An agent skill built for editing prose down to the knowledge level of the reader
 
 Invoke the skill and a 3 question intake begins: who the target reader is, what the reader should be able to do or understand after reading, and what text is being edited. If the answers you provide are too vague, the agent will not accept it and try to help refine the scope. 
 
-After answering the intake questions, two agent roles will be adopted sequentially: The Editor and the Evaluator. 
+After answering the intake questions, two agents will be deployed sequentially: The Editor and the Evaluator. 
 
 The **Editor** loops five questions and runs them in phases over your text, editing the text as it runs. Once complete, it passes over the edits to the evaluator agent.
 
@@ -27,9 +27,9 @@ The **Evaluator** scores the edits themselves *before* it reads the editor's exp
 
 One after the other they loop until all tests pass (or until five turns are spent) and the edited text is presented to the user. 
 
-***If each persona/agent takes three turns and there is no reduction in test failures, the agent will alert the user and ask before continuing.***
+***If each agent takes three turns and there is no reduction in test failures, the agent will alert the user and ask before continuing.***
 
-***If each persona/agent takes five turns and the text still fails, the best output and the fail points are presented.***
+***If each agent takes five turns and the text still fails, the best output and the fail points are presented.***
 
 
 ## When to Use
