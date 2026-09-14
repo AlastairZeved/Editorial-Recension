@@ -9,8 +9,6 @@ An agent plugin built for editing prose down to the knowledge level of the reade
 
 ***Important Caveat:*** _this was built as a Claude Code plugin and includes the deployment of isolated subagents; however, if your agent does not have subagent deployment as a capability (or does not ingest subagent files from Agent Plugins 1.0.0 standard repos natively) then this plugin will not work as intended. After install, be sure to verify that the subagent files were received and deployable. If they weren't, ask your agent to build the subagents based on the SKILL.md which contains all of the relevant information your subagent needs to function._
 
-***[Insert a video here]***
-
 ---
 
 ## How to Use
