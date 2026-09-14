@@ -17,8 +17,10 @@
   ],
   "extensions": {
     "com.openai": {
-      "displayName": "Editorial Recension",
-      "category": "writing"
+      "interface": {
+        "displayName": "Editorial Recension",
+        "category": "Writing"
+      }
     }
   }
 }

@@ -38,7 +38,7 @@ python3 scripts/sync_manifests.py --write   # rewrite the client manifests from 
 python3 scripts/sync_manifests.py           # drift check + structural validation, no writes
 ```
 
-Bump the version in `plugin.json` only. CI runs the same script on every push and pull request, re-runs `--write` and fails if anything changed (drift), and runs `claude plugin validate . --strict`.
+Bump the version in `plugin.json` only. CI runs the same script on every push and pull request — tree surface, drift and per-harness fields — re-runs `--write` and fails if that changes anything, tracked or untracked, and runs `claude plugin validate . --strict`.
 
 ---
 
