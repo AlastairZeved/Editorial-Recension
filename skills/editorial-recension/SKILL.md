@@ -246,7 +246,7 @@ Hold the editor's full return — edited text, schema trace, termination assessm
 Spawn the evaluator as a **separate** isolated subagent defined by `../../agents/evaluator.md`. Independence here is mechanical, not aspirational: the evaluator's scoring context must contain no trace of the editor's reasoning, drafts, or schema trace when it scores. Sending the whole editor return in one payload forfeits the independence this architecture exists for.
 
 **Message 1 — blind scoring.** Send only:
-- The same three-part editorial context that was passed to the editor
+- The full editorial context that was passed to the editor: TARGET READER / KNOWS / DOESN'T KNOW, PURPOSE / READER SHOULD, and the `PRECEDING CONTEXT` field verbatim
 - The original source text
 - The editor's output text
 

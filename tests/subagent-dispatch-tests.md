@@ -28,6 +28,7 @@
 - **Expected absence:** no intake conversation, no user's original messages, no evaluator content in the editor's context.
 
 **Test 2.2 — Editor return shape**
+- **Run:** complete one editor dispatch and inspect its return.
 - **Expected:** edited text + schema trace + termination assessment, all three present. The dispatcher holds the full return; the schema trace does not leave dispatcher custody until evaluator Message 2.
 
 ## Section 3: Evaluator Two-Message Round
@@ -53,23 +54,31 @@
 - **Expected:** the failure report goes back to the editor subagent (same instance on multi-turn hosts; re-dispatch seeded with previous output + trace + failure report on single-shot hosts); the editor re-enters at the phase where failures were identified; the next evaluator round begins with Message 1 containing the revised output.
 
 **Test 4.2 — PASS terminates**
+- **Run:** continue any session until the evaluator returns PASS.
 - **Expected:** termination condition confirmed; final edited text presented with the Output Format summary.
 
 **Test 4.3 — Cycle caps**
+- **Setup:** a text whose reported failures will not be fixed across cycles (e.g., instruct the editor to ignore one failure report).
+- **Run:** observe the cycle counter and user prompts through cycles 3 and 5.
 - **Expected:** maximum 5 editor↔evaluator cycles; non-decreasing failures surfaced to the user after cycle 3.
 
 ## Section 4b: Fallback Paths
 
 **Test 4b.1 — Single-shot subagent hosts**
-- **Expected:** evaluator Message 1 and Message 2 run as two separate single-shot dispatches; the first dispatch's scores are passed into the second; no scoring context contains the trace; the second dispatch emits the unified report.
+- **Setup:** a host that can spawn subagents but not continue them across messages — or simulate one by running two independent evaluator dispatches manually.
+- **Run:** execute the evaluator round as two dispatches per the Step 6 single-shot rule.
+- **Expected:** Message 1 and Message 2 run as two separate single-shot dispatches; the first dispatch's scores are passed into the second; no scoring context contains the trace; the second dispatch emits the unified report.
 
 **Test 4b.2 — Hosts without subagents at all**
+- **Run:** invoke the skill on a host with no subagent capability and follow it through dispatch to output.
 - **Expected:** both roles adopted sequentially in one conversation per the agent files; the output summary states plainly that the independence guarantee is procedural (evaluator's score-before-trace discipline), not mechanical.
 
 ## Section 5: Documentation Sync
 
 **Test 5.1 — README accuracy**
+- **Run:** read README.md against the implemented flow.
 - **Expected:** README describes subagent dispatch where the host supports it, sequential adoption otherwise, and the two-message evaluator round; no residual claim that agent files are read as prompt text by an adopted role.
 
 **Test 5.2 — Version coherence**
-- **Expected:** `.claude-plugin/plugin.json`, root `plugin.json`, and `.github/plugin/marketplace.json` all report the same version.
+- **Run:** print the version fields from `.claude-plugin/plugin.json`, root `plugin.json`, and `.github/plugin/marketplace.json`; compare.
+- **Expected:** all report the same version.
