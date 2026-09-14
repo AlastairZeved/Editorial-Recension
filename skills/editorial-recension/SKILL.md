@@ -22,7 +22,7 @@ A two-agent editorial system. The editor agent edits through named schemata. The
 
 ## How to Execute This Skill
 
-When invoked, follow this sequence exactly. Do not skip questions or pre-fill answers from surrounding context. The editor and evaluator agents inherit the audience definition established here — a vague target reader silently corrupts every downstream schema, so the validation below is load-bearing, not ceremony. Paths written `../../` are relative to this file; two levels up is the plugin root, where `agents/` and `schemata/` live.
+When invoked, follow this sequence exactly. Do not skip questions or pre-fill answers from surrounding context. The editor and evaluator agents inherit the audience definition established here — a vague target reader silently corrupts every downstream schema, so the validation below is load-bearing, not ceremony. Paths written `../../` are relative to this file; two levels up is the plugin root, where `agents/` and `schemata/` live. The plugin root's `agents/` directory is Claude Code's default agent discovery location — on Claude Code the editor and evaluator register automatically and are invoked as `editorial-recension:editor` and `editorial-recension:evaluator`; on other hosts, dispatch subagents with whatever mechanism the host provides, using these files as the agent definitions.
 
 Open with:
 
@@ -221,7 +221,7 @@ Do not dispatch agents until the user confirms this block is correct, or explici
 
 ### Step 5: Dispatch the Editor Subagent
 
-**Only dispatch after user confirmation.** Spawn the editor as an isolated subagent defined by `../../agents/editor.md`. Isolation is the point: the subagent receives only the dispatch payload below — never the intake conversation, the user's original messages, or anything else from this session.
+**Only dispatch after user confirmation.** Spawn the editor as an isolated subagent of type `editorial-recension:editor`, defined by `../../agents/editor.md`. Isolation is the point: the subagent receives only the dispatch payload below — never the intake conversation, the user's original messages, or anything else from this session.
 
 Send to the editor subagent:
 - The full TARGET READER / KNOWS / DOESN'T KNOW template
@@ -243,7 +243,7 @@ Hold the editor's full return — edited text, schema trace, termination assessm
 
 ### Step 6: Dispatch the Evaluator Subagent — Two-Message Round
 
-Spawn the evaluator as a **separate** isolated subagent defined by `../../agents/evaluator.md`. Independence here is mechanical, not aspirational: the evaluator's scoring context must contain no trace of the editor's reasoning, drafts, or schema trace when it scores. Sending the whole editor return in one payload forfeits the independence this architecture exists for.
+Spawn the evaluator as a **separate** isolated subagent of type `editorial-recension:evaluator`, defined by `../../agents/evaluator.md`. Independence here is mechanical, not aspirational: the evaluator's scoring context must contain no trace of the editor's reasoning, drafts, or schema trace when it scores. Sending the whole editor return in one payload forfeits the independence this architecture exists for.
 
 **Message 1 — blind scoring.** Send only:
 - The full editorial context that was passed to the editor: TARGET READER / KNOWS / DOESN'T KNOW, PURPOSE / READER SHOULD, and the `PRECEDING CONTEXT` field verbatim

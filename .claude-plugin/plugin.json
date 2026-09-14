@@ -6,9 +6,5 @@
     "name": "Alastair Zeved"
   },
   "repository": "https://github.com/AlastairZeved/Editorial-Recension",
-  "license": "MIT",
-  "agents": [
-    "./agents/editor.md",
-    "./agents/evaluator.md"
-  ]
+  "license": "MIT"
 }

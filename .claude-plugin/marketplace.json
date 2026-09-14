@@ -1,0 +1,14 @@
+{
+  "name": "editorial-recension",
+  "owner": {
+    "name": "Alastair Zeved"
+  },
+  "plugins": [
+    {
+      "name": "editorial-recension",
+      "source": "./",
+      "description": "Two-agent editing loop: an editor applies five named schemata, an evaluator scores blind before reading the editor's trace, and they loop until the text passes.",
+      "version": "0.2.0"
+    }
+  ]
+}

@@ -1,24 +1,31 @@
 # Subagent Dispatch — Test Scenarios
 
-**Skill under test:** `skills/editorial-recension/SKILL.md` (Steps 5–7), `agents/editor.md`, `agents/evaluator.md`, `.claude-plugin/plugin.json` (`agents` field)
+**Skill under test:** `skills/editorial-recension/SKILL.md` (Steps 5–7), `agents/editor.md`, `agents/evaluator.md` (loaded via Claude Code's default `agents/` discovery), `.claude-plugin/marketplace.json` (Claude install route), root `plugin.json` (Agent Plugins 1.0.0)
 **What this file is:** Manually verifiable acceptance criteria for subagent registration and the isolated dispatch flow. Not an automated test runner — these are reference scenarios for manual verification during development and review.
 
 ---
 
 ## Section 1: Manifest Registration
 
-**Test 1.1 — Agents registered as individual file paths**
-- **Setup:** `.claude-plugin/plugin.json` contains `"agents": ["./agents/editor.md", "./agents/evaluator.md"]`.
-- **Expected:** `claude plugin validate .` exits 0.
-- **Why:** The agents field is an array of file paths. A directory string fails validation (verified: `"agents": "./agents"` produces `agents: Invalid input`).
+**Test 1.1 — Agents load, not just validate**
+- **Setup:** the repo tree with `.claude-plugin/plugin.json` carrying NO `agents` field (default `agents/` discovery).
+- **Run:** `claude plugin validate .`; then inventory the loader: `claude --plugin-dir <repo> plugin details editorial-recension` (inline) or install and `claude plugin details editorial-recension`.
+- **Expected:** validate exits 0 AND the loader reports `Agents (2)` — `evaluator, editor`.
+- **Why this is asserted twice:** on Claude Code 2.1.207 an `agents` field in the manifest (array or string form) SUPPRESSES the default `agents/` scan — the loader reports Agents (0) while `validate` still passes. Validation cannot see load behaviour; only the inventory proves registration. Directory-string and glob forms additionally fail validation.
 
 **Test 1.2 — Portable manifest untouched**
 - **Setup:** root `plugin.json` (Agent Plugins 1.0.0).
 - **Expected:** no `agents` field; the Agent Plugins 1.0.0 schema deliberately excludes subagents in v1; unknown top-level fields are non-fatal but must not be shipped here. Schema-check the root manifest against `https://agent-plugins.org/schemas/1.0.0/plugin.schema.json`.
 
 **Test 1.3 — Package contents**
-- **Setup:** `git archive HEAD | tar -t`.
+- **Setup:** committed tree.
+- **Run:** `git archive HEAD | tar -t`.
 - **Expected:** `agents/editor.md` and `agents/evaluator.md` present in the distributable tree.
+
+**Test 1.4 — Claude marketplace install route**
+- **Setup:** `.claude-plugin/marketplace.json` present with an `owner` object and `plugins[0].source` as the string `"./"`.
+- **Run:** in a clean `CLAUDE_CONFIG_DIR`: `claude plugin marketplace add <repo>`, then `claude plugin install editorial-recension@editorial-recension`, then `claude plugin details editorial-recension`.
+- **Expected:** add succeeds — a missing `owner` fails the marketplace schema; `.claude-plugin/marketplace.json` is the only location Claude Code reads (`.agents/plugins/` is the Codex adapter, invisible here). Install succeeds — an object-form `source` passes marketplace-add but fails install ("source type your Claude Code version does not support"). Inventory after install: `Agents (2)  evaluator, editor`.
 
 ## Section 2: Editor Dispatch Isolation
 

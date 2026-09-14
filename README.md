@@ -5,7 +5,7 @@
 
 ## At a Glance
 
-An agent skill built for editing prose down to the knowledge level of the reader by deploying two agents — the Editor and the Evaluator — that loop over your text until the Evaluator confirms all tests pass (or until each has taken 5 turns, whichever comes first).
+An agent skill built for editing prose down to the knowledge level of the reader by deploying two agents that work in sequentially, the Editor and the Evaluator, on a loop of your text until the Evaluator confirms all tests pass (or until each has taken 5 turns, whichever comes first).
 
 ***Important Caveat:*** _this was built as a Claude Code plugin and includes the deployment of isolated subagents; however, if your agent does not have subagent deployment as a capability (or does not ingest subagent files from Agent Plugins 1.0.0 standard repos natively) then this plugin will not work as intended. After install, be sure to verify that the subagent files were received and deployable. If they weren't, ask your agent to build the subagents based on the SKILL.md which contains all of the relevant information your subagent needs to function._
 
