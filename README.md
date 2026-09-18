@@ -23,9 +23,10 @@ The repository root *is* the plugin — `plugin.json` plus `skills/`, `agents/` 
 | **VS Code** | Command Palette → *Chat: Install Plugin From Source* → the repository URL, or register the repository in `chat.plugins.marketplaces` and install from `@agentPlugins` in the Extensions view | `.claude-plugin/marketplace.json` |
 | **Cursor** | Clone, then *Customize* in the sidebar → Editorial Recension → *Install*. For development, symlink the clone into `~/.cursor/plugins/local/`. Cursor loads Agent Plugins packages unchanged, so no Cursor manifest ships here | root `plugin.json` |
 | **Google Antigravity** | Open the repository as a workspace — Antigravity scans `.agents/plugins/` — or copy `.agents/plugins/editorial-recension/` into `~/.gemini/config/plugins/` | `.agents/plugins/editorial-recension/plugin.json` |
+| **Hermes Agent** | `hermes plugins install AlastairZeved/Editorial-Recension --enable` (repeat with `hermes --profile <name> … --enable` per profile) | root `plugin.json` |
 | **Anything else** | Clone the repository into the agent's skill/plugin directory; anything that reads `SKILL.md` picks up `skills/editorial-recension/SKILL.md` | root `plugin.json` |
 
-Each route was checked against that vendor's own documentation on 2026-09-14 (the verification table lives in issue #17). The Antigravity workspace manifest is a marker file plus a symlink to `skills/`, so skill content stays single-sourced — clones on Windows need `git config core.symlinks true`.
+Each route was checked against that vendor's own documentation on 2026-09-14 (the verification table lives in issue #17). The Antigravity workspace manifest is a marker file plus a symlink to `skills/`, so skill content stays single-sourced — clones on Windows need `git config core.symlinks true`. Hermes Agent was additionally checked on 2026-09-18, against its docs and a live end-to-end run: the CLI ingests root `plugin.json` as a portable Agent Plugins package and registers the skill as `agent-plugin-editorial-recension-0d1aeec2:editorial-recension`; it does not ingest `agents/` natively, so the skill dispatches the editor and evaluator itself as isolated subagents using the agent files as their definitions (the fallback path described in the caveat above).
 
 ### Keeping the manifests in sync
 
